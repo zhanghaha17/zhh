@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>table模块快速使用</title>
+    <link rel="stylesheet" href="//unpkg.com/layui@2.6.8/dist/css/layui.css">
+</head>
+<body>
+
+<table id="demo" lay-filter="test"></table>
+
+
+<script src="//unpkg.com/layui@2.6.8/dist/layui.js"></script>
+<script>
+    layui.use('table', function(){
+        var table = layui.table;
+
+        //第一个实例
+        table.render({
+            elem: '#demo'
+            ,height: 312
+            ,url: 'http://localhost:8033/user/queryAllUser' //数据接口
+            ,page: true //开启分页
+            ,cols: [[ //表头
+                {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
+                ,{field: 'username', title: '用户名', width:80}
+                ,{field: 'age', title: '年龄', width:80, sort: true}
+            ]]
+        });
+
+    });
+</script>
+</body>
+</html>

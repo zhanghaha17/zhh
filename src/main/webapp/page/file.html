@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script>
+    $(document).ready(function(){
+        console.log('调用函数f');
+        f();
+        //或者直接写函数体  alert("js的onload加载")
+    });
+
+    function f(){
+
+
+        $.ajax({
+            url:"http://localhost:8033/user/showFile",    //请求的url地址
+            dataType:"json",   //返回格式为json
+            async:false,//请求是否异步，默认为异步，这也是ajax重要特性
+            type:"GET",   //请求方式
+            success:function(req){
+                //请求成功时处理
+                let blob = new Blob([req], {type: "text/plain;charset=utf-8"})
+
+                let textContain = transToFile(blob, "文件名", "text/plain")
+
+                // 这么写是因为文件转换是异步任务
+                transToFile = async(blob, fileName, fileType) => {
+                    return new window.File([blob, fileName, {type: fileType}])
+                }
+
+                // 转换完成后可以将file对象传给接口
+                textContain.then( (res)=> {
+                    let file = res
+                    console.log(res)
+                })
+            },
+            error:function(data){
+                alert('error');
+            }
+        });
+
+
+
+    }
+
+
+
+
+
+</script>
