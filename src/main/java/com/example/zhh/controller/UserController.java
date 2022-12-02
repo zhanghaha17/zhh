@@ -1,6 +1,8 @@
 package com.example.zhh.controller;
 
 import com.example.zhh.mapper.UserMapper;
+import com.example.zhh.pojo.SysLog;
+import com.example.zhh.service.SysLogDao;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +26,8 @@ public class UserController {
 
     @Resource
     private UserMapper userMapper;
-
+    @Resource
+    private SysLogDao sysLogDao;
 
     @GetMapping("/showUser")
     public ModelAndView showUser(){
@@ -40,6 +44,19 @@ public class UserController {
         map.put("count",userMapper.queryUserList().size());
         map.put("msg",userMapper.queryUserList()!=null?"成功":"失败");
         return map;
+    }
+
+    @GetMapping("/saveSysLog")
+    public void saveSysLog(){
+        SysLog sysLog = new SysLog();
+        sysLog.setCreateTime(new Date(System.currentTimeMillis()));
+        sysLog.setIp("127.0.0.1");
+        sysLog.setMethod("get");
+        sysLog.setOperation("insert");
+        sysLog.setParams("void");
+        sysLog.setTime(0);
+        sysLog.setUsername("zhh");
+        sysLogDao.saveSysLog(sysLog);
     }
 
     @GetMapping("/showFile")
@@ -71,4 +88,6 @@ public class UserController {
             e.printStackTrace();
         }
     }
+
+
 }
