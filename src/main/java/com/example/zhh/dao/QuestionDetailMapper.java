@@ -2,8 +2,10 @@ package com.example.zhh.dao;
 
 import com.example.zhh.pojo.QuestionDetail;
 import com.example.zhh.pojo.QuestionDetailExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
 
 public interface QuestionDetailMapper {
     /**

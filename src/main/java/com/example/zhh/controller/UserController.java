@@ -1,6 +1,8 @@
 package com.example.zhh.controller;
 
-import com.example.zhh.mapper.UserMapper;
+import com.example.zhh.dao.QuestionDetailMapper;
+import com.example.zhh.dao.UserMapper;
+import com.example.zhh.pojo.QuestionDetailExample;
 import com.example.zhh.pojo.SysLog;
 import com.example.zhh.service.SysLogDao;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +30,8 @@ public class UserController {
     private UserMapper userMapper;
     @Resource
     private SysLogDao sysLogDao;
+    @Resource
+    private QuestionDetailMapper questionDetailMapper;
 
     @GetMapping("/showUser")
     public ModelAndView showUser(){
@@ -44,6 +48,15 @@ public class UserController {
         map.put("count",userMapper.queryUserList().size());
         map.put("msg",userMapper.queryUserList()!=null?"成功":"失败");
         return map;
+    }
+
+    @GetMapping("/testMybatis")
+    public void testMybatis(){
+        QuestionDetailExample questionDetailExample = new QuestionDetailExample();
+        QuestionDetailExample.Criteria criteria = questionDetailExample.createCriteria();
+        criteria.andDifficultLevelEqualTo("easy");
+        int i = questionDetailMapper.countByExample(questionDetailExample);
+        System.out.println("问题详情:"+i);
     }
 
     @GetMapping("/saveSysLog")

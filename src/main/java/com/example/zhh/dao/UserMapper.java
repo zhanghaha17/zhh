@@ -1,4 +1,4 @@
-package com.example.zhh.mapper;
+package com.example.zhh.dao;
 
 import com.example.zhh.pojo.User;
 
