@@ -10,6 +10,13 @@
 <table id="demo" lay-filter="test"></table>
 
 
+<form>
+    <input type="text" name="userName" placeholder="姓名">
+    <input type="text" name="address" placeholder="地址">
+    <input type="checkbox" name="boxId" placeholder="单选框">
+
+</form>
+
 <script src="//unpkg.com/layui@2.6.8/dist/layui.js"></script>
 <script>
     layui.use('table', function(){
@@ -19,7 +26,7 @@
         table.render({
             elem: '#demo'
             ,height: 312
-            ,url: 'http://localhost:8033/user/queryAllUser' //数据接口
+            ,url: 'http://localhost:8033/web/user/queryAllUser' //数据接口
             ,page: true //开启分页
             ,cols: [[ //表头
                 {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}

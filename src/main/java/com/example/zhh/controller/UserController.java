@@ -2,12 +2,13 @@ package com.example.zhh.controller;
 
 import com.example.zhh.dao.QuestionDetailMapper;
 import com.example.zhh.dao.UserMapper;
+import com.example.zhh.dao.back.UserMapperBack;
 import com.example.zhh.pojo.QuestionDetailExample;
 import com.example.zhh.pojo.SysLog;
+import com.example.zhh.pojo.UserMongo;
 import com.example.zhh.service.SysLogDao;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.zhh.service.impl.UserMongoImpl;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -20,23 +21,27 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
-    @Resource
+    @Resource(type = UserMapperBack.class)
+    private UserMapperBack userMapperBack;
+    @Resource(type = com.example.zhh.dao.UserMapper.class)
     private UserMapper userMapper;
     @Resource
     private SysLogDao sysLogDao;
     @Resource
     private QuestionDetailMapper questionDetailMapper;
-
+    @Resource
+    private UserMongoImpl userMongoImpl;
     @GetMapping("/showUser")
     public ModelAndView showUser(){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("href");
+        modelAndView.setViewName("User");
         return modelAndView;
     }
 
@@ -44,6 +49,7 @@ public class UserController {
     public Map<String,Object> queryAllUser(){
         Map<String,Object> map = new HashMap<>();
         map.put("data",userMapper.queryUserList());
+        map.put("dataBack",userMapperBack.queryUserList());
         map.put("code",0);
         map.put("count",userMapper.queryUserList().size());
         map.put("msg",userMapper.queryUserList()!=null?"成功":"失败");
@@ -102,5 +108,14 @@ public class UserController {
         }
     }
 
+    @GetMapping("/queryUserMongo")
+    public List<UserMongo> queryUserMongo(){
+        return userMongoImpl.getAllUser();
+    }
+
+    @PostMapping("/saveUserMongo")
+    public void saveUserMongo(@RequestBody UserMongo userMongo){
+        userMongoImpl.saveUser(userMongo);
+    }
 
 }
