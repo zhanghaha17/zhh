@@ -7,4 +7,6 @@ import java.util.List;
 public interface UserMapper {
 
     public List<User> queryUserList();
+
+    User findByUserName(String userName);
 }

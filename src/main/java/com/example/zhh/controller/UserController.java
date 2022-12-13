@@ -3,11 +3,14 @@ package com.example.zhh.controller;
 import com.example.zhh.dao.QuestionDetailMapper;
 import com.example.zhh.dao.UserMapper;
 import com.example.zhh.dao.back.UserMapperBack;
-import com.example.zhh.pojo.QuestionDetailExample;
-import com.example.zhh.pojo.SysLog;
-import com.example.zhh.pojo.UserMongo;
+import com.example.zhh.pojo.*;
 import com.example.zhh.service.SysLogDao;
 import com.example.zhh.service.impl.UserMongoImpl;
+import com.example.zhh.utils.MD5Utils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.*;
+import org.apache.shiro.subject.Subject;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,8 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("/user")
+@CrossOrigin(value = "*")
 public class UserController {
 
     @Resource(type = UserMapperBack.class)
@@ -118,4 +122,52 @@ public class UserController {
         userMongoImpl.saveUser(userMongo);
     }
 
+
+//    关于shiro
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+    @PostMapping("/login")
+    @ResponseBody
+    public ResponseBo login(@RequestBody User user,HttpServletResponse response,HttpServletRequest request) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
+        String username = user.getUsername();
+        String password = user.getPassword();
+        // 密码MD5加密
+        password = MD5Utils.encrypt(username, password);
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        // 获取Subject对象
+        Subject subject = SecurityUtils.getSubject();
+        try {
+            subject.login(token);
+            return new ResponseBo(200,"登录认证成功",token);
+        } catch (UnknownAccountException e) {
+            throw new UnknownAccountException("账户未知");
+        } catch (IncorrectCredentialsException e) {
+            throw new IncorrectCredentialsException("通行证不正确");
+        } catch (LockedAccountException e) {
+            throw new LockedAccountException("账户被锁定");
+        } catch (AuthenticationException e) {
+            throw new AuthenticationException("认证失败");
+        }
+    }
+
+    @RequestMapping("/")
+    public String redirectIndex() {
+        return "redirect:/user/index";
+    }
+
+    @RequestMapping("/index")
+    public ModelAndView index(ModelAndView model) {
+        // 登录成后，即可通过Subject获取登录的用户信息
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        model.addObject("username", user.getUsername());
+        model.setViewName("index");
+        return model;
+    }
 }

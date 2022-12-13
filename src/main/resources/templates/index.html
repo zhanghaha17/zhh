@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+<span style="font-weight: bold;display: inline-block">你好:</span><h th:text="${username}">name是bigsai(我是离线数据)</h>
+
+<input type="file" multiple="multiple" accept="image/*" name="image" id="image" onchange="upload(this.files)">
+<div style="height: 600px;">
+    <img src="" id="preview" height="90%" width="100%">
+
+</div>
+</body>
+
+<script>
+    $(document).ready(function(){
+
+        // 开始写 jQuery 代码...
+            $('#test').val('123');
+
+
+    });
+
+    function upload(f) {
+        debugger;
+        let file = f[0];
+        const extension = file.name.substring(file.name.lastIndexOf('.') + 1)
+        console.log('extension:'+extension);
+        readFile(file).then(data=>{
+            console.log(data)
+            $('#preview').attr('src',data);
+        });
+    }
+
+    // 解析Excel数据为二进制数据流， 写入工具函数utils.js 中方便其他模块使用
+    const readFile = file => {
+        return new Promise(resolve => {
+            let reader = new FileReader()
+            //reader.readAsBinaryString(file)
+            reader.readAsDataURL(file);
+            reader.onload = ev => {
+                resolve(ev.target.result)
+            }
+        })
+    }
+
+</script>
+</html>

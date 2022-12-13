@@ -1,5 +1,6 @@
 package com.example.zhh.controller;
 
+import com.example.zhh.utils.MD5Utils;
 import net.sourceforge.pinyin4j.PinyinHelper;
 
 import java.util.Locale;
@@ -37,7 +38,8 @@ public class Test {
 
         String pinyin = getPinYinHeadChar("王语嫣1");
         System.out.println(pinyin);
-
+        String encrypt = MD5Utils.encrypt("7a38c13ec5e9310aed731de58bbc4214");
+        System.out.println("encrypt"+encrypt);
 
         try{
 /*            Class.forName("oracle.jdbc.driver.OracleDriver");

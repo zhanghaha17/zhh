@@ -165,6 +165,27 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- shiro-spring -->
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-spring</artifactId>
+			<version>1.4.0</version>
+		</dependency>
+
+
+		<!-- 引入freemarker模板引擎的依赖 -->
+<!--		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-freemarker</artifactId>
+		</dependency>-->
+
+		<!-- 引入thymeleaf模板引擎的依赖 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>

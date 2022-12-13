@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+</head>
+<body>
+
+    <form id="myForm">
+        <label>用户名</label>
+        <input type="text" name="username" placeholder="请填写用户名">
+        <div style="display: block;height: 10px"></div>
+        <label>密&nbsp;&nbsp;&nbsp;码</label>
+        <input type="password" name="password" placeholder="请填写密码">
+        <input type="button" value="登录" onclick="show()">
+    </form>
+
+
+    <SCRIPT>
+        function show() {
+            let form = document.getElementsByTagName("form");
+
+
+            let data = {};
+            let value = $('#myForm').serializeArray();
+            $.each(value, function (index, item) {
+                data[item.name] = item.value;
+            });
+            let json = JSON.stringify(data);
+            console.log('json : ',json)
+
+
+            debugger;
+            //使用ajax发送请求
+            $.ajax({
+                url:"/web/user/login",
+                type:"post",
+                data:json,
+                dataType:"json",
+                contentType:"application/json",
+                success:function(data){
+                    console.log(data);
+                    location.href = '/web/user/index';
+                },
+                error:function (err) {
+                    console.log(err)
+                }
+            });
+        }
+    </SCRIPT>
+<!--    <script src="../js/jquery.min.js"/>-->
+<!--    <script>
+        $(document).ready(function(){
+            console.log(11)
+        });
+        var submitw = function () {
+            let form = document.getElementsByTagName("form");
+            debugger;
+            //使用ajax发送请求
+            $.ajax({
+                url:"/web/user/login",
+                type:"post",
+                data:form.value,
+                dataType:"json",
+                success:function(data){
+                    console.log(data);
+                }
+            });
+        }
+
+    </script>-->
+</body>
+</html>
