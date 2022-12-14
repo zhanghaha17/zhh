@@ -15,6 +15,7 @@
         <div style="display: block;height: 10px"></div>
         <label>密&nbsp;&nbsp;&nbsp;码</label>
         <input type="password" name="password" placeholder="请填写密码">
+        <p><input type="checkbox" name="rememberMe" />记住我</p>
         <input type="button" value="登录" onclick="show()">
     </form>
 
@@ -42,7 +43,6 @@
                 dataType:"json",
                 contentType:"application/json",
                 success:function(data){
-                    console.log(data);
                     location.href = '/web/user/index';
                 },
                 error:function (err) {

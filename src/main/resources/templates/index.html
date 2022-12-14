@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -8,9 +8,21 @@
 <body>
 <span style="font-weight: bold;display: inline-block">你好:</span><h th:text="${username}">name是bigsai(我是离线数据)</h>
 
+<h3>权限测试链接</h3>
+<div>
+    <p shiro:hasRole="admin">你的角色为超级管理员</p>
+    <p shiro:hasRole="test">你的角色为测试账户</p>
+    <div>
+        <a shiro:hasPermission="user:user" th:href="@{/user/list}">获取用户信息</a>
+        <a shiro:hasPermission="user:add" th:href="@{/user/add}">新增用户</a>
+        <a shiro:hasPermission="user:delete" th:href="@{/user/delete}">删除用户</a>
+    </div>
+</div>
+<a th:href="@{/logout}">注销</a>
+
 <input type="file" multiple="multiple" accept="image/*" name="image" id="image" onchange="upload(this.files)">
 <div style="height: 600px;">
-    <img src="" id="preview" height="90%" width="100%">
+    <img src="" id="preview" height="90%" width="100%" alt="未选择图片">
 
 </div>
 </body>

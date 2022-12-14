@@ -1,25 +1,58 @@
 package com.example.zhh.config;
 
+import com.example.zhh.dao.TRolePermissionMapper;
+import com.example.zhh.dao.TUserRoleMapper;
 import com.example.zhh.dao.UserMapper;
+import com.example.zhh.pojo.TPermission;
+import com.example.zhh.pojo.TRole;
 import com.example.zhh.pojo.User;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 
 import javax.annotation.Resource;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ShiroRealm extends AuthorizingRealm {
 
     @Resource
     private UserMapper userMapper;
-
+    @Resource
+    private TUserRoleMapper tUserRoleMapper;
+    @Resource
+    private TRolePermissionMapper tRolePermissionMapper;
     /**
      * 获取用户角色和权限
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principal) {
-        return null;
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        String userName = user.getUsername();
+
+        System.out.println("用户" + userName + "获取权限-----ShiroRealm.doGetAuthorizationInfo");
+        SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
+
+        // 获取用户角色集
+        List<TRole> roleList = tUserRoleMapper.findByUserName(userName);
+        Set<String> roleSet = new HashSet<String>();
+        for (TRole r : roleList) {
+            roleSet.add(r.getName());
+        }
+        simpleAuthorizationInfo.setRoles(roleSet);
+
+        // 获取用户权限集
+        List<TPermission> permissionList = tRolePermissionMapper.findByUserName(userName);
+        Set<String> permissionSet = new HashSet<String>();
+        for (TPermission p : permissionList) {
+            permissionSet.add(p.getName());
+        }
+        simpleAuthorizationInfo.setStringPermissions(permissionSet);
+        return simpleAuthorizationInfo;
     }
 
     /**

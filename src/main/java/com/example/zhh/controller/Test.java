@@ -38,8 +38,8 @@ public class Test {
 
         String pinyin = getPinYinHeadChar("王语嫣1");
         System.out.println(pinyin);
-        String encrypt = MD5Utils.encrypt("7a38c13ec5e9310aed731de58bbc4214");
-        System.out.println("encrypt"+encrypt);
+        String encrypt = MD5Utils.encrypt("mrbird","123456");
+        System.out.println("mrbird"+encrypt);
 
         try{
 /*            Class.forName("oracle.jdbc.driver.OracleDriver");

@@ -9,8 +9,10 @@ import com.example.zhh.service.impl.UserMongoImpl;
 import com.example.zhh.utils.MD5Utils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -113,6 +115,7 @@ public class UserController {
     }
 
     @GetMapping("/queryUserMongo")
+    @ResponseBody
     public List<UserMongo> queryUserMongo(){
         return userMongoImpl.getAllUser();
     }
@@ -138,9 +141,10 @@ public class UserController {
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
         String username = user.getUsername();
         String password = user.getPassword();
+        Boolean rememberMe = user.getRememberMe()==null?false:true;
         // 密码MD5加密
         password = MD5Utils.encrypt(username, password);
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password,rememberMe);
         // 获取Subject对象
         Subject subject = SecurityUtils.getSubject();
         try {
@@ -170,4 +174,27 @@ public class UserController {
         model.setViewName("index");
         return model;
     }
+
+    @RequiresPermissions("user:user")
+    @RequestMapping("list")
+    public String userList(Model model) {
+        model.addAttribute("value", "获取用户信息");
+        return "user";
+    }
+
+    @RequiresPermissions("user:add")
+    @RequestMapping("add")
+    public String userAdd(Model model) {
+        model.addAttribute("value", "新增用户");
+        return "user";
+    }
+
+    @RequiresPermissions("user:delete")
+    @RequestMapping("delete")
+    public String userDelete(Model model) {
+        model.addAttribute("value", "删除用户");
+        return "user";
+    }
+
+
 }
