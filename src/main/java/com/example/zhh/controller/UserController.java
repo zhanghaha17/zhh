@@ -71,16 +71,17 @@ public class UserController {
         System.out.println("问题详情:"+i);
     }
 
-    @GetMapping("/saveSysLog")
+    @PostMapping("/saveSysLog")
+    @ResponseBody
     public void saveSysLog(){
         SysLog sysLog = new SysLog();
         sysLog.setCreateTime(new Date(System.currentTimeMillis()));
         sysLog.setIp("127.0.0.1");
-        sysLog.setMethod("get");
-        sysLog.setOperation("insert");
-        sysLog.setParams("void");
+        sysLog.setMethod("put");
+        sysLog.setOperation("update");
+        sysLog.setParams("object");
         sysLog.setTime(0);
-        sysLog.setUsername("zhh");
+        sysLog.setUsername("lfq");
         sysLogDao.saveSysLog(sysLog);
     }
 

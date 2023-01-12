@@ -3,9 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>[[${value}]]</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 </head>
 <body>
 <p>[[${value}]]</p>
-<a th:href="@{/index}">返回</a>
+<button onclick="saveSyslog()">提交</button>
+<a th:href="@{/user/index}">返回</a>
 </body>
+<script>
+    function saveSyslog() {
+        $.ajax({
+            url:"/web/user/saveSysLog",
+            type:"post",
+            success:function(data){
+                debugger
+                console.log(data)
+            },
+            error:function (err) {
+                debugger
+                console.log(data)
+            }
+        });
+    }
+</script>
 </html>
