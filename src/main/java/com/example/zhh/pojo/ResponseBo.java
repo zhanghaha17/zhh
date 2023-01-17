@@ -10,6 +10,11 @@ public class ResponseBo extends HashMap<String, Object> {
     private String message = "";
     private Object obj = null;
 
+    public ResponseBo(){
+        put("code",200);
+        put("message","成功");
+    }
+
     public ResponseBo(Integer code,String message,Object obj){
         this.code = code;
         this.message = message;
@@ -38,5 +43,9 @@ public class ResponseBo extends HashMap<String, Object> {
 
     public static ResponseBo error(String message){
         return new ResponseBo(500,message,null);
+    }
+
+    public static ResponseBo fault(){
+        return new ResponseBo();
     }
 }

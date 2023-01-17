@@ -25,6 +25,29 @@ public class TRolePermission implements Serializable {
      *
      * @mbggenerated
      */
+
+
+
+    private TRole tRole;
+
+    public TRole gettRole() {
+        return tRole;
+    }
+
+    public void settRole(TRole tRole) {
+        this.tRole = tRole;
+    }
+
+    private TPermission tPermission;
+
+    public TPermission gettPermission() {
+        return tPermission;
+    }
+
+    public void settPermission(TPermission tPermission) {
+        this.tPermission = tPermission;
+    }
+
     private static final long serialVersionUID = 1L;
 
     /**

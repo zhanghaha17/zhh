@@ -1,9 +1,14 @@
 package com.example.zhh.controller;
 
-import com.example.zhh.utils.MD5Utils;
+import com.example.zhh.handle.DocumentHandler;
+import com.example.zhh.pojo.ResponseBo;
 import net.sourceforge.pinyin4j.PinyinHelper;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class Test {
 
@@ -24,7 +29,7 @@ public class Test {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 /*
         String state = "1 , 2";
         String stateStr=state.replace(",","").replace(" ","");
@@ -32,14 +37,32 @@ public class Test {
 */
 
 
+        ResponseBo fault = ResponseBo.fault();
+        System.out.println("ok");
+
 /*        String a = "1-2";
         String[] split = a.split(",");
         System.out.println(split[0]);*/
 
-        String pinyin = getPinYinHeadChar("王语嫣1");
-        System.out.println(pinyin);
-        String encrypt = MD5Utils.encrypt("mrbird","123456");
-        System.out.println("mrbird"+encrypt);
+
+        File file =new File("d:\\test.doc");
+        if(!file.exists())
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        Map<String, Object> map =new HashMap<>();
+        new DocumentHandler().exportDoc("temp",map,file);
+
+
+
+
+
+//        String pinyin = getPinYinHeadChar("王语嫣1");
+//        System.out.println(pinyin);
+//        String encrypt = MD5Utils.encrypt("mrbird","123456");
+//        System.out.println("mrbird"+encrypt);
 
         try{
 /*            Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -60,6 +83,8 @@ public class Test {
         {
             e.printStackTrace();
         }
+
+
 
     }
 }

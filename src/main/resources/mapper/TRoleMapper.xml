@@ -83,6 +83,65 @@
     -->
     id, name, memo
   </sql>
+
+
+<!--  前两个都是按照结果嵌套-->
+<!--  新增role-permission一对多查询-->
+
+  <select id="getPolePer" resultMap="Role_Permission">
+    SELECT * FROM t_role tr
+                    left join t_role_permission trp
+                              on tr.id = trp.RID
+                    LEFT JOIN t_permission tp
+                              on trp.PID = tp.id
+        where tr.id = #{id}
+  </select>
+
+  <resultMap id="Role_Permission" type="com.example.zhh.pojo.TRole">
+    <id column="id" property="id"/>
+    <result column="name" property="name"></result>
+    <result column="memo" property="memo"></result>
+    <collection property="permissions" ofType="com.example.zhh.pojo.TRolePermission">
+      <result column="rid" property="rid"></result>
+      <result column="pid" property="pid"></result>
+      <association property="tPermission" javaType="com.example.zhh.pojo.TPermission">
+        <id property="id" column="id"></id>
+        <result property="url" column="url"></result>
+        <result property="name" column="name"></result>
+      </association>
+    </collection>
+  </resultMap>
+
+<!-- 新增role-permission多对一查询-->
+
+  <select id="getPerRole" resultMap="Permission_Role">
+    SELECT * FROM t_role_permission trp
+        left join  t_role tr
+            on tr.id = trp.RID
+    where tr.id = #{id}
+  </select>
+
+  <resultMap id="Permission_Role" type="com.example.zhh.pojo.TRolePermission">
+      <result property="rid" column="rid"></result>
+      <result property="pid" column="pid"></result>
+    <association property="tRole" javaType="com.example.zhh.pojo.TRole">
+      <id column="id" property="id"/>
+      <result column="name" property="name"></result>
+      <result column="memo" property="memo"></result>
+    </association>
+  </resultMap>
+
+<!--开始按照查询嵌套-->
+<select id="getRolePer2" resultMap="R_P_2">
+  select * from T_ROLE where id = #{id}
+</select>
+<resultMap id="R_P_2" type="com.example.zhh.pojo.TRole">
+  <id property="id" column="id"></id>
+  <collection property="permissions" ofType="com.example.zhh.pojo.TRolePermission" javaType="ArrayList" column="id" select="getPers"></collection>
+</resultMap>
+<select id="getPers" resultType="com.example.zhh.pojo.TRolePermission">
+  select * from T_ROLE_PERMISSION where rid = #{id}
+</select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.example.zhh.pojo.TRoleExample" >
     <!--
       WARNING - @mbggenerated

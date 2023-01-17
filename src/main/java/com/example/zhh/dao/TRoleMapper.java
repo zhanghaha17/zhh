@@ -2,8 +2,12 @@ package com.example.zhh.dao;
 
 import com.example.zhh.pojo.TRole;
 import com.example.zhh.pojo.TRoleExample;
-import java.util.List;
+import com.example.zhh.pojo.TRolePermission;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+
 
 public interface TRoleMapper {
     /**
@@ -93,4 +97,10 @@ public interface TRoleMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(TRole record);
+
+    List<TRole> getPolePer(String id);
+
+    List<TRolePermission> getPerRole(String id);
+
+    List<TRole> getRolePer2(String id);
 }
