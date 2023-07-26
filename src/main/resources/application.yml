@@ -1,7 +1,32 @@
 spring:
+#  mail:
+#    host: smtp.qq.com
+#    username: 1187907442@qq.com
+#    password: iiuxjlanrfmwgggd
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+#            required: true
   datasource:
     # 数据库访问配置, 使用druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
+  redis:
+    # Redis数据库索引（默认为0）
+    database: 0
+    # Redis服务器地址
+    host: localhost
+    # Redis服务器连接端口
+    port: 6379
+    jedis:
+       pool:
+          max-active: 8
+          max-wait: -1
+          max-idle: 8
+          min-idle: 0
+    timeout: 0
 primary:
   datasource:
     druid:
@@ -65,7 +90,7 @@ back:
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://139.9.62.198:3306/test?characterEncoding=utf8&serverTimezone=UTC&useSSL=false
+      url: jdbc:mysql://139.9.62.198:3306/test.properties?characterEncoding=utf8&serverTimezone=UTC&useSSL=false
       username: root
       password: MyNewPass4!
       # 连接池配置
@@ -134,6 +159,13 @@ back:
 #    context-path: /monitor
 
 
+
+
+
+
+
+
+
     # 端口
 server:
   port: 8033
@@ -145,25 +177,25 @@ server:
 #        # 应用名称
 #        name: node16-boot-actuator
 
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#            # 打开所有的监控点
-#        include: "*"
-#          # 自定义监控路径 monitor
-#          # 默认值：http://localhost:8016/actuator/*
-#          # 配置后：http://localhost:8016/monitor/*
-#      base-path: /monitor
-#  endpoint:
-#    health:
-#      show-details: always
-#    shutdown:
-#          # 通过指定接口关闭 SpringBoot
-#      enabled: true
-      # 可以自定义端口
-      # server:
-      #   port: 8089
+management:
+  endpoints:
+    web:
+      exposure:
+            # 打开所有的监控点
+        include: "*"
+          # 自定义监控路径 monitor
+          # 默认值：http://localhost:8016/actuator/*
+          # 配置后：http://localhost:8016/monitor/*
+      base-path: /monitor
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+          # 通过指定接口关闭 SpringBoot
+      enabled: true
+ #      可以自定义端口
+      server:
+         port: 8083
 
     # 描述项目基础信息
 #    info:
@@ -172,3 +204,14 @@ server:
 #        port: 8016
 #        version: 1.0.0
 #        author: cicada
+
+#springboot内置Logback
+logging:
+  level:
+    com.example.zhh.dao: debug
+#分页相关配置
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql

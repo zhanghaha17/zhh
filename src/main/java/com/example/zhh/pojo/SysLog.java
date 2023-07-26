@@ -1,5 +1,6 @@
 package com.example.zhh.pojo;
 
+import javax.validation.constraints.Email;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -8,6 +9,7 @@ public class SysLog implements Serializable {
     private static final long serialVersionUID = -6309732882044872298L;
 
     private Integer id;
+    @Email(message = "格式不规范")
     private String username;
     private String operation;
     private Integer time;

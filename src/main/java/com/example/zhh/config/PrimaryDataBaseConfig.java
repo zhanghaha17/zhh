@@ -114,7 +114,9 @@ public class PrimaryDataBaseConfig {
         sessionFactory.setDataSource(primaryDataSource);  // 设置数据源bean
         sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver()
                 .getResources(PrimaryDataBaseConfig.MAPPER_LOCATION));  // 设置mapper文件路径
-
+//        Properties p = new Properties();
+//        p.setProperty("order","BEFORE");
+//        sessionFactory.setConfigurationProperties(p);
         return sessionFactory.getObject();
     }
 }

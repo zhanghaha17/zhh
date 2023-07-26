@@ -14,6 +14,16 @@ public class User implements Serializable {
 
     private String rememberMe;
 
+    public User(){
+
+    }
+
+    public User(String username,String status){
+        this.username = username;
+        this.status = status;
+    }
+
+
     public String getRememberMe() {
         return rememberMe;
     }

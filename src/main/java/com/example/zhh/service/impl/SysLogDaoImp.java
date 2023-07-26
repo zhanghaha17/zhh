@@ -6,7 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class SysLogDaoImp implements SysLogDao {
@@ -25,5 +30,20 @@ public class SysLogDaoImp implements SysLogDao {
 
         NamedParameterJdbcTemplate npjt = new NamedParameterJdbcTemplate(this.jdbcTemplate.getDataSource());
         npjt.update(sql.toString(), new BeanPropertySqlParameterSource(syslog));
+    }
+    @Async(value = "asyncThreadPoolTaskExecutor")
+    @Override
+    public Future<Integer> testAsync() {
+        System.out.println(Thread.currentThread().getName());
+        sleep();
+        return new AsyncResult<>(123);
+    }
+
+    private void sleep() {
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

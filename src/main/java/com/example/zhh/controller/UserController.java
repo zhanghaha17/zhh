@@ -1,5 +1,8 @@
 package com.example.zhh.controller;
 
+import com.example.zhh.annotation.Log;
+import com.example.zhh.component.ApplicationValue;
+import com.example.zhh.component.CustumeValue;
 import com.example.zhh.dao.QuestionDetailMapper;
 import com.example.zhh.dao.UserMapper;
 import com.example.zhh.dao.back.UserMapperBack;
@@ -7,12 +10,16 @@ import com.example.zhh.pojo.*;
 import com.example.zhh.service.SysLogDao;
 import com.example.zhh.service.impl.UserMongoImpl;
 import com.example.zhh.utils.MD5Utils;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,14 +31,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 @Controller
 @RequestMapping("/user")
 @CrossOrigin(value = "*")
+@Validated
 public class UserController {
 
     @Resource(type = UserMapperBack.class)
@@ -44,45 +52,77 @@ public class UserController {
     private QuestionDetailMapper questionDetailMapper;
     @Resource
     private UserMongoImpl userMongoImpl;
+    @Resource
+    private ApplicationValue applicationValue;
+    @Autowired
+    private CustumeValue custumeValue;
+//    @Autowired
+//    private JavaMailSender jms;
+//    @Value("${spring.mail.username}")
+//    private String from;
     @GetMapping("/showUser")
     public ModelAndView showUser(){
+        int value = custumeValue.getA();
+        System.out.println("value"+value);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("User");
         return modelAndView;
     }
 
     @GetMapping("/queryAllUser")
+    @ResponseBody
     public Map<String,Object> queryAllUser(){
         Map<String,Object> map = new HashMap<>();
         map.put("data",userMapper.queryUserList());
-        map.put("dataBack",userMapperBack.queryUserList());
+//        map.put("dataBack",userMapperBack.queryUserList());
         map.put("code",0);
         map.put("count",userMapper.queryUserList().size());
         map.put("msg",userMapper.queryUserList()!=null?"成功":"失败");
         return map;
     }
 
-    @GetMapping("/testMybatis")
-    public void testMybatis(){
-        QuestionDetailExample questionDetailExample = new QuestionDetailExample();
-        QuestionDetailExample.Criteria criteria = questionDetailExample.createCriteria();
-        criteria.andDifficultLevelEqualTo("easy");
-        int i = questionDetailMapper.countByExample(questionDetailExample);
-        System.out.println("问题详情:"+i);
+    @GetMapping(value = "/testMybatis")
+    @ResponseBody
+    public void testMybatis(int id){
+//        QuestionDetailExample questionDetailExample = new QuestionDetailExample();
+//        QuestionDetailExample.Criteria criteria = questionDetailExample.createCriteria();
+//        criteria.andDifficultLevelEqualTo("easy");
+//        int i = questionDetailMapper.countByExample(questionDetailExample);
+//        System.out.println("问题详情:"+i);
+        String [] str = new String[]{"111","222"};
+        System.out.println("str"+str.toString());
+        System.out.println("id"+id);
+        QuestionDetail questionDetail = new QuestionDetail();
+        questionDetail.setQuestionId(666);
+        questionDetail.setDifficultLevel("hard");
+//        questionDetail.setId(new Random().nextInt(100));
+        int insert = questionDetailMapper.insert(questionDetail);
+        System.out.println("主键是"+questionDetail.getId());
+
+
+//        TimerThread timerThread = new TimerThread();
+//        timerThread.start();
+//        System.out.println("开始");
     }
 
     @PostMapping("/saveSysLog")
     @ResponseBody
-    public void saveSysLog(){
-        SysLog sysLog = new SysLog();
-        sysLog.setCreateTime(new Date(System.currentTimeMillis()));
-        sysLog.setIp("127.0.0.1");
-        sysLog.setMethod("put");
-        sysLog.setOperation("update");
-        sysLog.setParams("object");
-        sysLog.setTime(0);
-        sysLog.setUsername("lfq");
-        sysLogDao.saveSysLog(sysLog);
+    @Log(value = "saveSysLog")
+    public SysLog saveSysLog(@RequestBody SysLog sysLog,HttpServletRequest request){
+        String path = request.getSession().getServletContext().getRealPath("file");
+        System.out.println(path);
+//        SysLog sysLog = new SysLog();
+//        sysLog.setCreateTime(new Date(System.currentTimeMillis()));
+//        sysLog.setIp("127.0.0.1");
+//        sysLog.setMethod("put");
+//        sysLog.setOperation("update");
+//        sysLog.setParams("object");
+//        sysLog.setTime(0);
+//        sysLog.setUsername("lfqlfq");
+//        sysLogDao.saveSysLog(sysLog);
+        System.out.println("111");
+        return sysLog;
+
     }
 
     @GetMapping("/showFile")
@@ -122,6 +162,7 @@ public class UserController {
     }
 
     @PostMapping("/saveUserMongo")
+    @ResponseBody
     public void saveUserMongo(@RequestBody UserMongo userMongo){
         userMongoImpl.saveUser(userMongo);
     }
@@ -195,6 +236,56 @@ public class UserController {
     public String userDelete(Model model) {
         model.addAttribute("value", "删除用户");
         return "user";
+    }
+
+
+    @Log("执行方法一")
+    @RequestMapping("/testAspect/{id}")
+    @ResponseBody
+    public void testAspect(@PathVariable String id){
+        System.out.println(id);
+    }
+
+    @ApiOperation(value = "获取用户信息", notes = "根据用户id获取用户信息")
+    @ApiImplicitParam(name = "id", value = "用户id", required = true, dataType = "Integer", paramType = "path")
+    @GetMapping("/{id}")
+    public @ResponseBody User getUserById(@PathVariable(value = "id") Integer id) {
+        User user = new User();
+        user.setId(id);
+        user.setUsername("mrbird");
+        user.setAge(25);
+        return user;
+    }
+
+
+
+
+/*    @RequestMapping("sendSimpleEmail")
+    @ResponseBody
+    public String sendSimpleEmail() {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(from);
+            message.setTo("1755743868@qq.com"); // 接收地址
+            message.setSubject("一封简单的邮件"); // 标题
+            message.setText("使用Spring Boot发送简单邮件。"); // 内容
+            jms.send(message);
+            return "发送成功1";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+    }*/
+
+
+    @GetMapping("/testAsync")
+    @ResponseBody
+    public void testAsync(){
+        long l = System.currentTimeMillis();
+        Future<Integer> integerFuture = sysLogDao.testAsync();
+        System.out.println("异步方法返回值"+integerFuture);
+        System.out.println("执行时间为"+(System.currentTimeMillis()-l));
+
     }
 
 

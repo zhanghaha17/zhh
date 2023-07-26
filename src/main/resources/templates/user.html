@@ -12,12 +12,26 @@
 </body>
 <script>
     function saveSyslog() {
+        var user = {
+            "id":1,
+            "username":"张三"
+        };
+
+        var jsonJ = {
+            "aaa":"bbb",
+            "ccc":11
+        }//json格式的js对象
+        console.log(jsonJ.aaa+''+jsonJ.ccc)
+
         $.ajax({
             url:"/web/user/saveSysLog",
             type:"post",
+            data:JSON.stringify(user),
+            contentType:"application/json;charset=UTF-8",
+            dataType:"json",
             success:function(data){
                 debugger
-                console.log(data)
+                console.log(data.id)
             },
             error:function (err) {
                 debugger

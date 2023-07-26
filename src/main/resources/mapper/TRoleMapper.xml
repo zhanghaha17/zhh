@@ -137,10 +137,10 @@
 </select>
 <resultMap id="R_P_2" type="com.example.zhh.pojo.TRole">
   <id property="id" column="id"></id>
-  <collection property="permissions" ofType="com.example.zhh.pojo.TRolePermission" javaType="ArrayList" column="id" select="getPers"></collection>
+  <collection property="permissions" ofType="com.example.zhh.pojo.TRolePermission" javaType="ArrayList" column="{uuid=id}" select="getPers"></collection>
 </resultMap>
 <select id="getPers" resultType="com.example.zhh.pojo.TRolePermission">
-  select * from T_ROLE_PERMISSION where rid = #{id}
+  select * from T_ROLE_PERMISSION where rid = #{uuid}
 </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.example.zhh.pojo.TRoleExample" >
     <!--

@@ -1,8 +1,10 @@
 package com.example.zhh.pojo;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ResponseBo extends HashMap<String, Object> {
+public class ResponseBo extends HashMap<String, Object> implements Serializable {
 
     private static final long serialVersionUID = -8713837118340960775L;
 
@@ -38,7 +40,9 @@ public class ResponseBo extends HashMap<String, Object> {
     }
 
     public static ResponseBo ok(){
-        return new ResponseBo(200,"success",null);
+        ArrayList<Integer> integers = new ArrayList<>();
+        integers.add(1);
+        return new ResponseBo(200,"success",integers);
     }
 
     public static ResponseBo error(String message){
@@ -47,5 +51,15 @@ public class ResponseBo extends HashMap<String, Object> {
 
     public static ResponseBo fault(){
         return new ResponseBo();
+    }
+
+
+    @Override
+    public String toString() {
+        return "ResponseBo{" +
+                "code=" + code +
+                ", message='" + message + '\'' +
+                ", obj=" + obj +
+                '}';
     }
 }

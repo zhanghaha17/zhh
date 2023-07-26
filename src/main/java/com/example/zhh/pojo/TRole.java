@@ -127,15 +127,11 @@ public class TRole implements Serializable {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", memo=").append(memo);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+        return "TRole{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", memo='" + memo + '\'' +
+                ", permissions=" + permissions +
+                '}';
     }
 }
