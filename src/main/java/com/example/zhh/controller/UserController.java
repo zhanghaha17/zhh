@@ -17,6 +17,7 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -34,6 +35,7 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 @Controller
@@ -56,6 +58,10 @@ public class UserController {
     private ApplicationValue applicationValue;
     @Autowired
     private CustumeValue custumeValue;
+
+    @Autowired
+    private ThreadPoolTaskExecutor executor;
+
 //    @Autowired
 //    private JavaMailSender jms;
 //    @Value("${spring.mail.username}")
@@ -282,8 +288,22 @@ public class UserController {
     @ResponseBody
     public void testAsync(){
         long l = System.currentTimeMillis();
-        Future<Integer> integerFuture = sysLogDao.testAsync();
-        System.out.println("异步方法返回值"+integerFuture);
+
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Future<Integer> integerFuture = sysLogDao.testAsync();
+                try {
+                    System.out.println(integerFuture.get());
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } catch (ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        },10000);
+//        Future<Integer> integerFuture = sysLogDao.testAsync();
+//        System.out.println("异步方法返回值"+integerFuture);
         System.out.println("执行时间为"+(System.currentTimeMillis()-l));
 
     }
