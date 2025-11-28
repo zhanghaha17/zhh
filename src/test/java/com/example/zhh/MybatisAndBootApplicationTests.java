@@ -106,7 +106,19 @@ public class MybatisAndBootApplicationTests {
 //		Random random = new Random();
 //		tTaishi.setValue(String.valueOf(random.nextInt(1)));
 //		tTaishiMapper.insert(tTaishi);
-		new TimerThread().start();
+		//new TimerThread().start();
+		String str = "线aaa线";
+		String aa = str.replace("线", "");
+		System.out.println(aa);
+
+		try{
+			int i = 1/0;
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
+		System.out.println("xixihaha");
+
 	}
 
 	@Test
